@@ -1,0 +1,16 @@
+[{
+	"modid": "jadednei",
+	"name": "JadedNEI",
+	"description": "Custom Jaded Packs NEI tweaker",
+	"version": "${version}",
+	"mcversion": "${mcversion}",
+	"url": "",
+	"updateUrl": "",
+	"authorList": [
+		"Developaws"
+	],
+	"credits": "Copyright JadedPacks",
+	"logoFile": "",
+	"screenshots": [],
+	"dependencies": []
+}]
