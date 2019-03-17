@@ -5,7 +5,7 @@ import stanhebben.minetweaker.api.Tweaker;
 import stanhebben.minetweaker.api.TweakerExecuteException;
 import stanhebben.minetweaker.api.TweakerNameSpace;
 import stanhebben.minetweaker.api.value.TweakerFunction;
-import stanhebben.minetweaker.api.value.TweakerItemStack;
+import stanhebben.minetweaker.api.value.TweakerItemStackPattern;
 import stanhebben.minetweaker.api.value.TweakerValue;
 
 public class NEIShowFunction extends TweakerFunction {
@@ -15,7 +15,7 @@ public class NEIShowFunction extends TweakerFunction {
 		if(arguments.length != 1) {
 			throw new TweakerExecuteException("NEI.show requires 1 arguments.");
 		}
-		final TweakerItemStack item = TweakerValue.notNull(arguments[0], "name cannot be null").toItemStack("name must be an item");
+		final TweakerItemStackPattern item = TweakerValue.notNull(arguments[0], "name cannot be null").toItemStackPattern("name must be an item");
 		Tweaker.apply(new NEIShowAction(item));
 		return null;
 	}

@@ -8,19 +8,15 @@ package stanhebben.minetweaker.api.value;
 
 import net.minecraft.item.ItemStack;
 
-public final class TweakerItemStack extends TweakerValue {
+public final class TweakerItem extends TweakerValue {
 	private final ItemStack value;
 
-	public TweakerItemStack(ItemStack value) {
+	public TweakerItem(ItemStack value) {
 		this.value = value;
 	}
 
-	public ItemStack get() {
+	public ItemStack make() {
 		return value;
-	}
-
-	public String getDisplayName() {
-		return value.getDisplayName();
 	}
 
 	@Override

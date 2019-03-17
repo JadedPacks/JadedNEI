@@ -1,19 +1,26 @@
 package com.jadedpacks.jadednei.actions;
 
 import codechicken.nei.api.API;
+import codechicken.nei.api.ItemInfo;
 import stanhebben.minetweaker.api.IUndoableAction;
-import stanhebben.minetweaker.api.value.TweakerItemStack;
+import stanhebben.minetweaker.api.value.TweakerItem;
+import stanhebben.minetweaker.api.value.TweakerItemStackPattern;
 
 public class NEIShowAction implements IUndoableAction {
-	private final TweakerItemStack item;
+	private final TweakerItemStackPattern item;
 
-	public NEIShowAction(final TweakerItemStack item) {
+	public NEIShowAction(final TweakerItemStackPattern item) {
 		this.item = item;
 	}
 
 	@Override
 	public void apply() {
-		API.addNBTItem(item.get());
+		for(TweakerItem item : item.getMatches()) {
+			if(!ItemInfo.excludeIds.contains(item.make().itemID)) {
+				API.addNBTItem(item.make());
+			}
+			ItemInfo.excludeIds.remove(item.make().itemID);
+		}
 	}
 
 	@Override
@@ -23,16 +30,18 @@ public class NEIShowAction implements IUndoableAction {
 
 	@Override
 	public void undo() {
-		API.hideItem(item.get().itemID);
+		for(TweakerItem item : item.getMatches()) {
+			API.hideItem(item.make().itemID);
+		}
 	}
 
 	@Override
 	public String describe() {
-		return "Showing " + item.getDisplayName() + " as NEI entry.";
+		return "Showing " + item.toPatternString() + " as NEI entry.";
 	}
 
 	@Override
 	public String describeUndo() {
-		return "Hiding " + item.getDisplayName() + " as NEI entry.";
+		return "Hiding " + item.toPatternString() + " as NEI entry.";
 	}
 }
