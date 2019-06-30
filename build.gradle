@@ -7,11 +7,14 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 	}
 }
 
 apply plugin: 'forge'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 new File('gradle.properties').withReader {
 	def prop = new Properties()
@@ -24,9 +27,9 @@ group = "com.jadedpacks"
 archivesBaseName = "JadedNEI"
 
 minecraft {
-	version = "${config.minecraftVersion}-${config.forgeVersion}"
-	//runDir = "run"
-	//mappings = config.mcpMappings
+	version = "${config.minecraftVersion}-${config.forgeVersion}-${config.minecraftVersion}"
+	runDir = "run"
+	mappings = config.mcpMappings
 	replace "@VERSION@", config.modVersion
 }
 
@@ -38,8 +41,8 @@ repositories {
 }
 
 dependencies {
-	compile "codechicken:NotEnoughItems:1.6.4-1.6.1.9:dev"
-	compile files('/libs/zMineTweaker-1.6.4-2.3.1.jar')
+	compile "codechicken:NotEnoughItems:1.7.10-1.0.4.95:dev"
+	compile files("/libs/MineTweaker3-Dev-Full-1.7.10-3.0.10B.jar")
 }
 
 def root = project.projectDir.parentFile
@@ -64,8 +67,4 @@ processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}
-}
-
-jar {
-	exclude("stanhebben/**")
 }
