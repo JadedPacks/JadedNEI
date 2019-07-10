@@ -1,7 +1,12 @@
 package com.jadedpacks.jadednei;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+
+import com.google.common.primitives.Ints;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,8 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 @ZenClass("mods.jadedpacks.NEITweaker")
 public class NEITweaker {
@@ -22,7 +26,7 @@ public class NEITweaker {
 		data.setString("modid", "minecraft");
 		data.setString("itemname", "stone");
 		is.setTagCompound(data);
-		MineTweakerAPI.apply(new NEISetEntriesAction(i, Arrays.asList(is)));
+		MineTweakerAPI.apply(new NEISetEntriesAction(i, is));
 	}
 
 	@ZenMethod
@@ -36,9 +40,7 @@ public class NEITweaker {
 		ArrayList<ItemStack> stacks = new ArrayList<>();
 		for(ItemStack s : buildStack(i, new int[]{1, 2, 3})) {
 			try {
-				stacks.add((ItemStack) i.getItem().getClass().getDeclaredMethod("getStack", new Class[] {
-					ItemStack.class, String.class
-				}).invoke(null, new Object[]{s, "minecraft:stone"}));
+				stacks.add((ItemStack) i.getItem().getClass().getDeclaredMethod("getStack", ItemStack.class, String.class).invoke(null, new Object[]{s, "minecraft:stone"}));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -52,9 +54,7 @@ public class NEITweaker {
 		ArrayList<ItemStack> stacks = new ArrayList<>();
 		for(ItemStack s : buildStack(i, new int[]{1, 2, 4, 257, 258, 260, 513, 514, 516, 769, 770, 772})) {
 			try {
-				stacks.add((ItemStack) i.getItem().getClass().getDeclaredMethod("create", new Class[] {
-					int.class, String.class
-				}).invoke(null, new Object[]{s.getMetadata(), "minecraft:stone"}));
+				stacks.add((ItemStack) i.getItem().getClass().getDeclaredMethod("create", int.class, String.class).invoke(null, new Object[]{s.getMetadata(), "minecraft:stone"}));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -87,5 +87,31 @@ public class NEITweaker {
 			stacks.add(new ItemStack(item.getItem(), 1, i));
 		}
 		return stacks;
+	}
+
+	// Custom NEI hiding of items, because the NEI api is a pile of crap, and default MineTweaker doesn't like it
+
+	@ZenMethod
+	public static void hideItems(IItemStack input, int[] metas) {
+		ItemStack is = getItemStack(input);
+		Item item = is.getItem();
+		ArrayList<ItemStack> stacks = new ArrayList<>();
+		item.getSubItems(item, null, stacks);
+		List<Integer> metaz = Ints.asList(metas), invertMetaz = new ArrayList<>();
+		for(ItemStack s : stacks) {
+			if(s != null && !metaz.contains(s.getMetadata())) {
+				invertMetaz.add(s.getMetadata());
+			}
+		}
+		MineTweakerAPI.apply(new NEISetEntriesAction(is, intListToArray(invertMetaz)));
+	}
+
+	private static int[] intListToArray(List<Integer> list) {
+		int size = list.size();
+		int[] array = new int[size];
+		for(int i = 0; i < size; i++) {
+			array[i] = list.get(i);
+		}
+		return array;
 	}
 }

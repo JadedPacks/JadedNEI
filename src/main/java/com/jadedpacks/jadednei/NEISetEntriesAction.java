@@ -5,14 +5,14 @@ import minetweaker.IUndoableAction;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 public class NEISetEntriesAction implements IUndoableAction {
 	private final ItemStack item;
 	private final Iterable<ItemStack> items;
 
-	public NEISetEntriesAction(ItemStack item) {
-		this(item, Collections.singletonList(item));
+	public NEISetEntriesAction(ItemStack item, ItemStack items) {
+		this(item, Arrays.asList(items));
 	}
 
 	public NEISetEntriesAction(ItemStack item, int[] metas) {
