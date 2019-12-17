@@ -19,7 +19,11 @@ import java.util.*;
 public class NEITweaker {
 	@ZenMethod
 	public static void hideAE2Facades() {
-		ItemStack i = getStack("appliedenergistics2:item.ItemFacade"), is = i;
+		ItemStack i = getStack("appliedenergistics2:item.ItemFacade");
+		if(i == null) {
+			return;
+		}
+		ItemStack is = i.copy();
 		final NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("x", new int[]{1, 0});
 		data.setString("modid", "minecraft");
@@ -36,6 +40,9 @@ public class NEITweaker {
 	@ZenMethod
 	public static void hideExUMicroblocks() {
 		ItemStack i = getStack("ExtraUtilities:microblocks");
+		if(i == null) {
+			return;
+		}
 		ArrayList<ItemStack> stacks = new ArrayList<>();
 		for(ItemStack s : buildStack(i, new int[]{1, 2, 3})) {
 			try {
@@ -50,6 +57,9 @@ public class NEITweaker {
 	@ZenMethod
 	public static void hideForgeMicroblocks() {
 		ItemStack i = getStack("ForgeMicroblock:microblock");
+		if(i == null) {
+			return;
+		}
 		ArrayList<ItemStack> stacks = new ArrayList<>();
 		for(ItemStack s : buildStack(i, new int[]{1, 2, 4, 257, 258, 260, 513, 514, 516, 769, 770, 772})) {
 			try {
@@ -89,6 +99,16 @@ public class NEITweaker {
 	}
 
 	// Custom NEI hiding of items, because the NEI api is a pile of crap, and default MineTweaker doesn't like it
+
+	@ZenMethod
+	public static void hideAllItems(IItemStack input) {
+		Item item = getItemStack(input).getItem();
+		ArrayList<ItemStack> stacks = new ArrayList<>();
+		item.getSubItems(item, null, stacks);
+		for(ItemStack is : stacks) {
+			MineTweakerAPI.apply(new NEIHideItemAction(is));
+		}
+	}
 
 	@ZenMethod
 	public static void hideItems(IItemStack input, int[] metas) {
