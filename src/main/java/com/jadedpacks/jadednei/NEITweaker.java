@@ -3,7 +3,9 @@ package com.jadedpacks.jadednei;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 import com.google.common.primitives.Ints;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.block.Block;
@@ -57,7 +59,7 @@ public class NEITweaker {
 	@ZenMethod
 	public static void hideForgeMicroblocks() {
 		ItemStack i = getStack("ForgeMicroblock:microblock");
-		if(i == null) {
+		if(i == null || FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			return;
 		}
 		ArrayList<ItemStack> stacks = new ArrayList<>();
@@ -102,6 +104,9 @@ public class NEITweaker {
 
 	@ZenMethod
 	public static void hideAllItems(IItemStack input) {
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+			return;
+		}
 		Item item = getItemStack(input).getItem();
 		ArrayList<ItemStack> stacks = new ArrayList<>();
 		item.getSubItems(item, null, stacks);
@@ -112,6 +117,9 @@ public class NEITweaker {
 
 	@ZenMethod
 	public static void hideItems(IItemStack input, int[] metas) {
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+			return;
+		}
 		ItemStack is = getItemStack(input);
 		Item item = is.getItem();
 		ArrayList<ItemStack> stacks = new ArrayList<>();
